@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Character} from "./model/Character";
 import Characters from "./characters.json"
@@ -10,6 +10,7 @@ function App() {
 
     //const characters: Character[] = Characters;
 const [characters,setcharacters]=useState<Character[]>([]);
+const [counter,setCounter]=useState(0)
 function getCharacters(){
     axios.get("https://rickandmortyapi.com/api/character")
         .then((response)=>{
@@ -18,7 +19,14 @@ function getCharacters(){
     .catch((error)=>{
     console.error(error);
     })
+
 }
+    function incrementCounter(){
+        setCounter(counter+1)
+    }
+useEffect(()=>{
+console.log("Etwas Aufwendiges..."+counter)},[counter])
+
    // const characters: Character[] = Characters;
     const [searchText, setSearchText] = useState<string>("");
 
@@ -40,6 +48,10 @@ function getCharacters(){
 
     return (
         <div className="App">
+            Counter:{counter}
+            <button onClick={incrementCounter}>
+                +1
+            </button>
             <button onClick={getCharacters}>Fetch Characters</button>
             <CharacterGallery characters={characters}/>
             <h1>The one and only Rick and Morty Gallery</h1>
