@@ -3,11 +3,23 @@ import './App.css';
 import {Character} from "./model/Character";
 import Characters from "./characters.json"
 import CharacterGallery from "./component/CharacterGallery";
+import axios from "axios";
 import SearchCharacter from "./component/SearchCharacter";
 
 function App() {
 
-    const characters: Character[] = Characters;
+    //const characters: Character[] = Characters;
+const [characters,setcharacters]=useState<Character[]>([]);
+function getCharacters(){
+    axios.get("https://rickandmortyapi.com/api/character")
+        .then((response)=>{
+        setcharacters(response.data.results);
+    })
+    .catch((error)=>{
+    console.error(error);
+    })
+}
+   // const characters: Character[] = Characters;
     const [searchText, setSearchText] = useState<string>("");
 
     function handleSearchText(searchText: string) {
@@ -28,6 +40,10 @@ function App() {
 
     return (
         <div className="App">
+            <button onClick={getCharacters}>Fetch Characters</button>
+            <CharacterGallery characters={characters}/>
+            <h1>The one and only Rick and Morty Gallery</h1>
+
             <h1>The one and only Rick and Morty Gallery</h1>
             Search: <SearchCharacter searchText={handleSearchText}/>
             {
