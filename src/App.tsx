@@ -1,15 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
+import { Routes,  Route } from 'react-router-dom';
 import {Character} from "./model/Character";
 import Characters from "./characters.json"
 import CharacterGallery from "./component/CharacterGallery";
 import axios from "axios";
 import SearchCharacter from "./component/SearchCharacter";
+import EpisodesGallery from "./component/EpisodesGallery";
+import {Episodes} from "./model/Episodes";
+
 
 function App() {
 
     //const characters: Character[] = Characters;
 const [characters,setcharacters]=useState<Character[]>([]);
+    const [episodes,setepisodes]=useState<Episodes[]>([]);
 const [counter,setCounter]=useState(0)
 function getCharacters(){
     axios.get("https://rickandmortyapi.com/api/character")
@@ -21,13 +26,25 @@ function getCharacters(){
     })
 
 }
+    function getEpisodes() {
+        axios.get("https://rickandmortyapi.com/api/episode")
+            .then((response) => {
+                setepisodes(response.data.results);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+    }
     function incrementCounter(){
         setCounter(counter+1)
     }
 useEffect(()=>{
 console.log("Etwas Aufwendiges..."+counter)},[counter])
+    useEffect(()=> {
+        getEpisodes();
+    },[])
 
-   // const characters: Character[] = Characters;
+    // const characters: Character[] = Characters;
     const [searchText, setSearchText] = useState<string>("");
 
     function handleSearchText(searchText: string) {
@@ -48,6 +65,14 @@ console.log("Etwas Aufwendiges..."+counter)},[counter])
 
     return (
         <div className="App">
+
+
+            <Routes>
+
+                <Route  path="/" element={<EpisodesGallery Episodes={episodes}/>}></Route>
+
+            </Routes>
+
             Counter:{counter}
             <button onClick={incrementCounter}>
                 +1
